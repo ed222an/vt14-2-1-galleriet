@@ -11,6 +11,10 @@
     <form id="form1" runat="server">
     <div>
 
+        <div>
+            <asp:ListView ID="ListView1" runat="server"></asp:ListView>
+        </div>
+
         <%-- Felsummeringslista --%>
         <div>
             <asp:ValidationSummary ID="ValidationSummary1" runat="server" ForeColor="Red" HeaderText="Fel har inträffat. Åtgärda fel och försök igen."/>

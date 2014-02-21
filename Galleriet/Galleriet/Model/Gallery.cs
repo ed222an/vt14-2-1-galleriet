@@ -12,7 +12,7 @@ namespace Galleriet.Model
     {
         #region Fält
 
-        private static readonly IEnumerable<string> ApprovedExtensions;
+        private static readonly Regex ApprovedExtensions;
         private static string PhysicalUploadImagePath;
         private static readonly Regex SanitizePath;
 
@@ -20,9 +20,19 @@ namespace Galleriet.Model
 
         #region Konstruktor
 
-        private static Gallery()
+        static Gallery()
         {
-            // TODO: Initialisera fälten.
+            // Initierar fälten.
+            ApprovedExtensions = new Regex(@"^.*\.(gif|jpg|png)$");
+
+            PhysicalUploadImagePath = Path.Combine(
+                AppDomain.CurrentDomain.GetData("APPBASE").ToString(),
+                @"Content\Images");
+
+            // http://stackoverflow.com/questions/146134/how-to-remove-illegal-characters-from-path-and-filenames/146162#146162
+            var invalidChars = new string(Path.GetInvalidFileNameChars());
+            SanitizePath = new Regex(string.Format("[{0}]", Regex.Escape(invalidChars)));
+            invalidChars = SanitizePath.Replace(invalidChars, "");
         }
 
         #endregion
@@ -32,23 +42,34 @@ namespace Galleriet.Model
         public IEnumerable<string> GetImageNames()
         {
             // Returnerar en referens av typen IEnumerable<string> till ett List-objekt innehållande bildernas filnamn sorterade i bokstavsordning.
+            List<string> imageList = new List<string>(100);
+
+            string[] files = Directory.GetFiles(PhysicalUploadImagePath);
 
 
-            throw new NotImplementedException();
+            foreach (string fileName in files)
+            {
+                if (ApprovedExtensions.IsMatch(fileName))
+                {
+                    imageList.Add(fileName);
+                }
+            }
+            
+            imageList.Sort();
+            return imageList;
         }
 
         public bool ImageExists(string name)
         {
             // Returnerar true om bild med angivet namn finns i katalogen Content/Images.
-
-
-            return false;
+            return GetImageNames().Contains(name);
         }
 
         private bool IsValidImage(Image image)
         {
             // Returnerar true om den uppladdade filens innehåll verkligen är av typen gif, jpeg eller png.
 
+            //image.RawFormat.Guid == System.Drawing.Imaging.ImageFormat.Gif.Guid;
 
             return false;
         }

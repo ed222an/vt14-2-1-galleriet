@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Galleriet.Model;
 
 namespace Galleriet
 {
@@ -18,7 +19,8 @@ namespace Galleriet
         {
             if (IsValid)
             {
-
+                Gallery gallery = new Gallery();
+                gallery.GetImageNames();
             }
             else
             {
