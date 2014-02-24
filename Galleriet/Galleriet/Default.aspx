@@ -12,7 +12,12 @@
     <div>
 
         <div>
-            <asp:ListView ID="ListView1" runat="server"></asp:ListView>
+            <asp:Repeater ID="ImageRepeater" runat="server"
+                ItemType="Galleriet.Model.Gallery"
+                SelectMethod="ImageRepeater_GetData">
+
+            </asp:Repeater>
+            <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
         </div>
 
         <%-- Felsummeringslista --%>

@@ -68,10 +68,7 @@ namespace Galleriet.Model
         private bool IsValidImage(Image image)
         {
             // Returnerar true om den uppladdade filens innehåll verkligen är av typen gif, jpeg eller png.
-
-            //image.RawFormat.Guid == System.Drawing.Imaging.ImageFormat.Gif.Guid;
-
-            return false;
+            return image.RawFormat.Guid == System.Drawing.Imaging.ImageFormat.Gif.Guid;
         }
 
         public string SaveImage(Stream stream, string fileName)
@@ -79,8 +76,19 @@ namespace Galleriet.Model
             /* Verifierar att filen är av rätt MIME-typ (annars kastas ett undantag), säkerställer att filnamnet är unik,
              * sparar bilden samt skapar och sparar en tumnagelbild. Filnamnet bilden sparas under returneras. */
 
+            var image = System.Drawing.Image.FromStream(stream); // stream -> ström med bild
 
-            throw new NotImplementedException();
+            if (IsValidImage(image))
+            {
+                var thumbnail = image.GetThumbnailImage(60, 45, null, System.IntPtr.Zero);
+                thumbnail.Save(PhysicalUploadImagePath); // path -> fullständig fysisk filnamn inklusive sökväg
+            }
+            else
+            {
+                throw new ApplicationException("Bildens filändelse är inte tillåten!");
+            }
+
+            return fileName;
         }
 
         #endregion

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Galleriet.Model;
+using System.IO;
 
 namespace Galleriet
 {
@@ -21,6 +22,11 @@ namespace Galleriet
             {
                 Gallery gallery = new Gallery();
                 gallery.GetImageNames();
+
+                foreach (var image in gallery.GetImageNames())
+                {
+                    Label1.Text += image;
+                }
             }
             else
             {
@@ -29,6 +35,12 @@ namespace Galleriet
                 validator.ErrorMessage = String.Format("Ett oväntat fel inträffade vid uppladdning av bilen. Försök igen.");
                 Page.Validators.Add(validator);
             }
+        }
+
+        public IEnumerable<Gallery> ImageRepeater_GetData()
+        {
+
+            return null;
         }
     }
 }
