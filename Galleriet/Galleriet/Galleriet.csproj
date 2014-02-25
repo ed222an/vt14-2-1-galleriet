@@ -57,14 +57,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Images\Chrysanthemum.jpg" />
-    <Content Include="Content\Images\Desert.jpg" />
-    <Content Include="Content\Images\Hydrangeas.jpg" />
-    <Content Include="Content\Images\Jellyfish.jpg" />
-    <Content Include="Content\Images\Koala.jpg" />
-    <Content Include="Content\Images\Lighthouse.jpg" />
-    <Content Include="Content\Images\Penguins.jpg" />
-    <Content Include="Content\Images\Tulips.jpg" />
     <Content Include="Default.aspx" />
     <Content Include="ErrorPage.html" />
     <Content Include="Content\style.css" />
@@ -96,7 +88,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Content\Images\Thumbs\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

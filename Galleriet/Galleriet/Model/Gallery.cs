@@ -39,7 +39,7 @@ namespace Galleriet.Model
 
         #region Metoder
 
-        public IEnumerable<string> GetImageNames()
+        public static IEnumerable<string> GetImageNames()
         {
             // Returnerar en referens av typen IEnumerable<string> till ett List-objekt innehållande bildernas filnamn sorterade i bokstavsordning.
             List<string> imageList = new List<string>(100);
@@ -59,19 +59,21 @@ namespace Galleriet.Model
             return imageList;
         }
 
-        public bool ImageExists(string name)
+        public static bool ImageExists(string name)
         {
-            // Returnerar true om bild med angivet namn finns i katalogen Content/Images.
-            return GetImageNames().Contains(name);
+            // Returnerar true om bild med angivet namn finns i katalogen Content\Images.
+            return File.Exists(Path.Combine(PhysicalUploadImagePath, name));
         }
 
-        private bool IsValidImage(Image image)
+        private static bool IsValidImage(Image image)
         {
             // Returnerar true om den uppladdade filens innehåll verkligen är av typen gif, jpeg eller png.
-            return image.RawFormat.Guid == System.Drawing.Imaging.ImageFormat.Gif.Guid;
+            return image.RawFormat.Guid == System.Drawing.Imaging.ImageFormat.Gif.Guid ||
+                image.RawFormat.Guid == System.Drawing.Imaging.ImageFormat.Jpeg.Guid ||
+                image.RawFormat.Guid == System.Drawing.Imaging.ImageFormat.Png.Guid;
         }
 
-        public string SaveImage(Stream stream, string fileName)
+        public static string SaveImage(Stream stream, string fileName)
         {
             /* Verifierar att filen är av rätt MIME-typ (annars kastas ett undantag), säkerställer att filnamnet är unik,
              * sparar bilden samt skapar och sparar en tumnagelbild. Filnamnet bilden sparas under returneras. */
@@ -80,8 +82,38 @@ namespace Galleriet.Model
 
             if (IsValidImage(image))
             {
-                var thumbnail = image.GetThumbnailImage(60, 45, null, System.IntPtr.Zero);
-                thumbnail.Save(PhysicalUploadImagePath); // path -> fullständig fysisk filnamn inklusive sökväg
+                if (ImageExists(fileName))
+                {
+                    int counter = 0;
+                    string extension = Path.GetExtension(fileName);
+                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+
+                    do
+                    {
+                        // Lägger ihop den nya strängen till den duplicerade bilden.
+                        fileName = String.Format("{0}({1}){2}", fileNameWithoutExtension, ++counter, extension);
+                    } while (ImageExists(fileName));
+
+                    // Sparar bilden i Imagekatalogen.
+                    image.Save(Path.Combine(PhysicalUploadImagePath, fileName));
+
+                    // Skapar en tumnagelbild och sparar den i tumnagelkatalogen.
+                    var thumbnail = image.GetThumbnailImage(60, 45, null, System.IntPtr.Zero);
+                    thumbnail.Save(Path.Combine(
+                    AppDomain.CurrentDomain.GetData("APPBASE").ToString(),
+                    @"Content\Images\Thumbs", fileName));
+                }
+                else
+                {
+                    // Sparar bilden i Imagekatalogen.
+                    image.Save(Path.Combine(PhysicalUploadImagePath, fileName));
+
+                    // Skapar en tumnagelbild och sparar den i tumnagelkatalogen.
+                    var thumbnail = image.GetThumbnailImage(60, 45, null, System.IntPtr.Zero);
+                    thumbnail.Save(Path.Combine(
+                    AppDomain.CurrentDomain.GetData("APPBASE").ToString(),
+                    @"Content\Images\Thumbs", fileName));
+                }
             }
             else
             {

@@ -20,13 +20,12 @@ namespace Galleriet
         {
             if (IsValid)
             {
-                Gallery gallery = new Gallery();
-                gallery.GetImageNames();
+                // Sparar den valda bilden.
+                string fileName = Path.GetFileName(ChooseFileUpload.PostedFile.FileName);
+                Stream fileStream = ChooseFileUpload.FileContent;
 
-                foreach (var image in gallery.GetImageNames())
-                {
-                    Label1.Text += image;
-                }
+                var gallery = new Gallery();
+                Gallery.SaveImage(fileStream, fileName);
             }
             else
             {
@@ -37,10 +36,14 @@ namespace Galleriet
             }
         }
 
-        public IEnumerable<Gallery> ImageRepeater_GetData()
+        public IEnumerable<string> ImageRepeater_GetData()
+        {
+            return Gallery.GetImageNames();
+        }
+
+        protected void ImageRepeater_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
 
-            return null;
         }
     }
 }

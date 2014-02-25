@@ -13,11 +13,15 @@
 
         <div>
             <asp:Repeater ID="ImageRepeater" runat="server"
-                ItemType="Galleriet.Model.Gallery"
+                OnItemDataBound="ImageRepeater_ItemDataBound"
+                ItemType="System.String"
                 SelectMethod="ImageRepeater_GetData">
-
+                <ItemTemplate>
+                    <asp:HyperLink ID="HyperLink1" runat="server"
+                        ImageUrl='<%# "~/Content/Images/Thumbs" + Item %>'
+                        NavigateUrl='<%# "?name=" + Item %>'></asp:HyperLink>
+                </ItemTemplate>
             </asp:Repeater>
-            <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
         </div>
 
         <%-- Felsummeringslista --%>
