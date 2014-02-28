@@ -9,3 +9,11 @@ a {
 #errorList {
     color:red;
 }
+
+.hidden {
+visibility:hidden;
+}
+
+.visible {
+visibility:visible;
+}

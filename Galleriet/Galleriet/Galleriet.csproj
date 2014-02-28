@@ -57,6 +57,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\dialog_close.ico" />
     <Content Include="Default.aspx" />
     <Content Include="ErrorPage.html" />
     <Content Include="Content\style.css" />
